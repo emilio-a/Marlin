@@ -40,11 +40,17 @@
 #endif
 
 void eeprom_init() {
+#if ENABLED(SOFT_I2C_EEPROM)
   eWire.begin(
     #if PINS_EXIST(I2C_SCL, I2C_SDA) && DISABLED(SOFT_I2C_EEPROM)
       uint8_t(I2C_SDA_PIN), uint8_t(I2C_SCL_PIN)
     #endif
   );
+#else
+  Wire.setSDA(uint8_t(I2C_SDA_PIN));
+  Wire.setSCL(uint8_t(I2C_SCL_PIN));
+  eWire.begin();
+#endif
 }
 
 #if ENABLED(USE_SHARED_EEPROM)
